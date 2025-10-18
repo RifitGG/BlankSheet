@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Чистый лист - Совместное творчество{% endblock %}
+
+{% block navbar %}
+
+{% endblock %}
+
+{% block content %}
+
+<nav class="main-navbar">
+    <div class="container">
+        <div class="navbar-content">
+            <a href="/" class="navbar-brand">
+                <span class="brand-text">Чистый лист</span>
+            </a>
+            <div class="navbar-links">
+                <a href="#features" class="nav-link">Возможности</a>
+                <a href="#how-it-works" class="nav-link">Как это работает</a>
+            </div>
+            <div class="nav-auth" id="navAuth">
+                <button class="theme-toggle-btn" onclick="toggleTheme()" title="Переключить тему">
+                    <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+                <button class="btn btn-secondary btn-sm" id="loginBtn" onclick="showAuthModal('login')">Войти</button>
+                <button class="btn btn-primary btn-sm" id="registerBtn" onclick="showAuthModal('register')">Регистрация</button>
+                <button class="btn btn-primary btn-sm" id="dashboardBtn" onclick="window.location.href='/dashboard'" style="display: none;">Личный кабинет</button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="landing-page">
+    
+    <header class="hero">
+        <div class="container">
+            <div class="hero-slider">
+                <div class="hero-slide active">
+                    <h1 class="hero-title bounce-in">
+                        <span class="highlight glow">Чистый лист</span>
+                        <br>Совместные цифровые доски
+                    </h1>
+                    <p class="hero-subtitle slide-up">
+                        Создавайте, делитесь и сотрудничайте на цифровых досках в реальном времени со своей командой
+                    </p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-lg pulse" onclick="showAuthModal('register')">
+                            Начать бесплатно
+                        </button>
+                        <button class="btn btn-secondary btn-lg" onclick="showAuthModal('login')">
+                            Войти
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-slide">
+                    <h1 class="hero-title">
+                        <span class="highlight">Совместная работа</span>
+                        <br>в реальном времени
+                    </h1>
+                    <p class="hero-subtitle">
+                        До 10 пользователей могут одновременно работать на одной доске
+                    </p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-lg" onclick="showAuthModal('register')">
+                            Попробовать сейчас
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-slide">
+                    <h1 class="hero-title">
+                        <span class="highlight">Безопасность и приватность</span>
+                        <br>Контролируйте доступ
+                    </h1>
+                    <p class="hero-subtitle">
+                        Уникальные коды досок — только ваша команда получает доступ
+                    </p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-lg" onclick="showAuthModal('register')">
+                            Создать доску
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-btn prev" onclick="prevSlide()">‹</button>
+                <div class="slider-dots">
+                    <span class="dot active" onclick="goToSlide(0)"></span>
+                    <span class="dot" onclick="goToSlide(1)"></span>
+                    <span class="dot" onclick="goToSlide(2)"></span>
+                </div>
+                <button class="slider-btn next" onclick="nextSlide()">›</button>
+            </div>
+            <div class="floating-shapes">
+                <div class="shape shape-1">□</div>
+                <div class="shape shape-2">○</div>
+                <div class="shape shape-3">△</div>
+                <div class="shape shape-4">◇</div>
+            </div>
+        </div>
+    </header>
+
+    
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title wobble scroll-animate-scale">Почему Чистый лист?</h2>
+            <div class="features-grid">
+                <div class="features-slider-wrapper" id="featuresSlider">
+                    <div class="feature-card hover-lift">
+                        <div class="feature-icon rotate-on-hover">🎨</div>
+                        <h3>Простые инструменты</h3>
+                        <p>Интуитивные инструменты рисования с множеством цветов, размеров кисти и форм</p>
+                    </div>
+                    <div class="feature-card hover-lift">
+                        <div class="feature-icon bounce-on-hover">🤝</div>
+                        <h3>Совместная работа</h3>
+                        <p>Работайте вместе с до 10 пользователями на одной доске одновременно</p>
+                    </div>
+                    <div class="feature-card hover-lift">
+                        <div class="feature-icon shake-on-hover">🔒</div>
+                        <h3>Безопасный доступ</h3>
+                        <p>Приватные доски с уникальными кодами — только приглашённые участники могут присоединиться</p>
+                    </div>
+                    <div class="feature-card hover-lift">
+                        <div class="feature-icon pulse-on-hover">📊</div>
+                        <h3>Отслеживание прогресса</h3>
+                        <p>Личный кабинет со статистикой и всеми вашими досками в одном месте</p>
+                    </div>
+                    <div class="feature-card hover-lift">
+                        <div class="feature-icon wiggle-on-hover">📝</div>
+                        <h3>Богатый контент</h3>
+                        <p>Добавляйте изображения, текст и рисунки для создания полноценных досок</p>
+                    </div>
+                    <div class="feature-card hover-lift">
+                        <div class="feature-icon spin-on-hover">🌙</div>
+                        <h3>Тёмная тема</h3>
+                        <p>Переключайтесь между светлой и тёмной темами для комфортной работы в любое время</p>
+                    </div>
+                </div>
+            </div>
+            <div class="features-nav">
+                <button class="features-nav-btn" id="featuresPrev" onclick="prevFeature()">‹</button>
+                <button class="features-nav-btn" id="featuresNext" onclick="nextFeature()">›</button>
+            </div>
+            <div class="features-indicators" id="featuresIndicators"></div>
+        </div>
+    </section>
+
+    
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <h2 class="section-title swing scroll-animate-scale">Как это работает?</h2>
+            <div class="steps">
+                <div class="step fade-in scroll-animate-left">
+                    <div class="step-number">1</div>
+                    <h3>Создай аккаунт</h3>
+                    <p>Регистрация за пару секунд</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step fade-in scroll-animate" style="animation-delay: 0.2s">
+                    <div class="step-number">2</div>
+                    <h3>Создай или присоединись</h3>
+                    <p>Начни новую доску или присоединись к существующей</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step fade-in scroll-animate-right" style="animation-delay: 0.4s">
+                    <div class="step-number">3</div>
+                    <h3>Твори вместе!</h3>
+                    <p>Рисуй, делись идеями и создавай шедевры</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section class="cta" id="cta-section">
+        <div class="container">
+            <h2 class="rainbow-text scroll-animate-scale">Готовы начать работу?</h2>
+            <p class="scroll-animate">Присоединяйтесь к тысячам команд, которые уже сотрудничают на Чистом листе</p>
+            <button class="btn btn-primary btn-lg heartbeat scroll-animate" onclick="showAuthModal('register')">
+                Создать бесплатный аккаунт
+            </button>
+        </div>
+    </section>
+</div>
+
+
+<div id="authModal" class="modal">
+    <div class="modal-content scale-in">
+        <span class="close" onclick="closeAuthModal()">&times;</span>
+        
+        
+        <div id="loginForm" class="auth-form">
+            <h2>С возвращением!</h2>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginUsername">Имя пользователя</label>
+                    <input type="text" id="loginUsername" required placeholder="Введите ваш никнейм">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль</label>
+                    <input type="password" id="loginPassword" required placeholder="Введите пароль">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Войти</button>
+            </form>
+            <p class="auth-switch">
+                Нет аккаунта? 
+                <a href="#" onclick="switchAuthForm('register'); return false;">Зарегистрироваться</a>
+            </p>
+        </div>
+
+        
+        <div id="registerForm" class="auth-form" style="display: none;">
+            <h2>Создать аккаунт</h2>
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="registerUsername">Имя пользователя</label>
+                    <input type="text" id="registerUsername" required 
+                           pattern="[a-zA-Z0-9_]{3,50}" 
+                           title="3-50 символов (буквы, цифры, подчеркивание)"
+                           placeholder="Придумайте никнейм">
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Пароль</label>
+                    <input type="password" id="registerPassword" required minlength="6" placeholder="Минимум 6 символов">
+                </div>
+                <div class="form-group">
+                    <label for="registerPasswordConfirm">Подтверждение пароля</label>
+                    <input type="password" id="registerPasswordConfirm" required minlength="6" placeholder="Повторите пароль">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Зарегистрироваться</button>
+            </form>
+            <p class="auth-switch">
+                Уже есть аккаунт? 
+                <a href="#" onclick="switchAuthForm('login'); return false;">Войти</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}

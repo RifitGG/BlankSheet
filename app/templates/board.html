@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}Доска {{ board_code }} - Чистый лист{% endblock %}
+
+{% block extra_css %}
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="board-page">
+    
+  
+    <div class="modern-toolbar" id="modernToolbar">
+        <div class="toolbar-header">
+            <div class="board-info-compact">
+                <span class="board-code-badge" id="boardCodeBadge">{{ board_code }}</span>
+                <button class="btn-icon-small" onclick="copyBoardCode()" title="Копировать код">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+                <button class="btn-icon-small" onclick="goToDashboard()" title="Вернуться">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    </svg>
+                </button>
+            </div>
+            <button class="toolbar-toggle" id="toolbarToggle" onclick="toggleToolbar()" title="Скрыть панель">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <div class="toolbar-section">
+            <div class="section-label">История</div>
+            <div class="tool-group">
+                <button class="tool-btn-modern" id="undoBtn" onclick="undo()" title="Отменить (Ctrl+Z)" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 7v6h6M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"></path>
+                    </svg>
+                </button>
+                <button class="tool-btn-modern" id="redoBtn" onclick="redo()" title="Повторить (Ctrl+Y)" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 7v6h-6M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="toolbar-section">
+            <div class="section-label">Инструменты</div>
+            <div class="tool-group">
+                <button class="tool-btn-modern" data-tool="select" onclick="selectTool('select')" title="Выделение (V)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/>
+                    </svg>
+                </button>
+                <button class="tool-btn-modern active" data-tool="pen" onclick="selectTool('pen')" title="Кисть">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/>
+                    </svg>
+                </button>
+                <button class="tool-btn-modern" data-tool="eraser" onclick="selectTool('eraser')" title="Ластик">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 20H7L2 15l9-9 9 9-3 3z"/>
+                    </svg>
+                </button>
+                <button class="tool-btn-modern" data-tool="text" onclick="selectTool('text')" title="Текст">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 7V4h16v3M9 20h6M12 4v16"/>
+                    </svg>
+                </button>
+                <button class="tool-btn-modern" data-tool="image" onclick="selectTool('image')" title="Изображение">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="toolbar-section">
+            <div class="section-label">Фигуры</div>
+            <div class="tool-group">
+                <button class="tool-btn-modern" data-tool="line" onclick="selectTool('line')" title="Линия">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="19" x2="19" y2="5"></line>
+                    </svg>
+                </button>
+                <button class="tool-btn-modern" data-tool="rectangle" onclick="selectTool('rectangle')" title="Прямоугольник">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                    </svg>
+                </button>
+                <button class="tool-btn-modern" data-tool="circle" onclick="selectTool('circle')" title="Круг">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="toolbar-section">
+            <div class="section-label">Цвет</div>
+            <div class="color-palette">
+                <input type="color" id="colorPicker" value="#FFD700" onchange="changeColor(this.value)" class="color-input">
+                <div class="color-swatches">
+                    <button class="color-swatch" style="background: #FFD700" onclick="changeColor('#FFD700')" title="Золотой"></button>
+                    <button class="color-swatch" style="background: #FF6B6B" onclick="changeColor('#FF6B6B')" title="Красный"></button>
+                    <button class="color-swatch" style="background: #4ECDC4" onclick="changeColor('#4ECDC4')" title="Бирюзовый"></button>
+                    <button class="color-swatch" style="background: #45B7D1" onclick="changeColor('#45B7D1')" title="Синий"></button>
+                    <button class="color-swatch" style="background: #96CEB4" onclick="changeColor('#96CEB4')" title="Зеленый"></button>
+                    <button class="color-swatch" style="background: #FFA07A" onclick="changeColor('#FFA07A')" title="Оранжевый"></button>
+                    <button class="color-swatch" style="background: #DDA0DD" onclick="changeColor('#DDA0DD')" title="Фиолетовый"></button>
+                    <button class="color-swatch" style="background: #000000" onclick="changeColor('#000000')" title="Черный"></button>
+                    <button class="color-swatch white-swatch" style="background: #FFFFFF" onclick="changeColor('#FFFFFF')" title="Белый"></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="toolbar-section">
+            <div class="section-label">Размер: <span id="brushSizeValue">3</span>px</div>
+            <input type="range" id="brushSize" min="1" max="50" value="3" oninput="changeBrushSize(this.value)" class="size-slider">
+        </div>
+
+        <div class="toolbar-section">
+            <div class="section-label">Действия</div>
+            <div class="action-buttons">
+                <button class="action-btn" onclick="downloadBoard()" title="Скачать">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                </button>
+                <button class="action-btn danger" onclick="clearCanvas()" title="Очистить">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="toolbar-footer">
+            <div class="online-indicator">
+                <span class="pulse-dot"></span>
+                <span id="onlineCount">0</span> online
+            </div>
+            <div class="save-indicator" id="saveIndicator">
+                <svg class="save-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                <span id="saveStatus">Сохранено</span>
+            </div>
+        </div>
+    </div>
+
+    <button class="floating-toolbar-toggle" id="floatingToggle" onclick="toggleToolbar()" title="Показать панель инструментов" style="display: none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+    </button>
+
+    <div class="canvas-container">
+        <canvas id="whiteboard"></canvas>
+    </div>
+
+    <div class="users-panel hover-lift" id="usersPanel">
+        <h3>👥 Участники</h3>
+        <div id="usersList"></div>
+    </div>
+</div>
+
+<div id="textModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeTextModal()">&times;</span>
+        <h2>Add Text</h2>
+        <form onsubmit="handleAddText(event)">
+            <div class="form-group">
+                <label for="textContent">Text</label>
+                <textarea id="textContent" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="fontSize">Font Size</label>
+                <input type="number" id="fontSize" value="20" min="10" max="100">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Add Text</button>
+        </form>
+    </div>
+</div>
+
+<input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/board.js') }}"></script>
+<script>
+    // Initialize board when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        const boardCode = '{{ board_code }}';
+        initBoard(boardCode);
+    });
+</script>
+{% endblock %}

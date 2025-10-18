@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Панель управления - Чистый лист{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+    
+    <header class="dashboard-header">
+        <div class="container">
+            <h1>Чистый лист</h1>
+            <div class="header-actions">
+                <a href="/" class="btn btn-link">На главную</a>
+                <span id="username" class="username"></span>
+                <button class="btn btn-secondary" onclick="handleLogout()">Выход</button>
+                <div class="theme-toggle-btn" onclick="toggleTheme()" title="Переключить тему">
+                    <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container dashboard-container">
+        
+        <section class="statistics-section">
+            <h2>Статистика</h2>
+            <div class="stats-grid">
+                <div class="stat-card hover-lift">
+                    <div class="stat-icon pulse-on-hover">📊</div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="boardsCreated">0</div>
+                        <div class="stat-label">Досок создано</div>
+                    </div>
+                </div>
+                <div class="stat-card hover-lift">
+                    <div class="stat-icon bounce-on-hover">🤝</div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="boardsJoined">0</div>
+                        <div class="stat-label">Присоединений</div>
+                    </div>
+                </div>
+                <div class="stat-card hover-lift">
+                    <div class="stat-icon wiggle-on-hover">🎨</div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="participatedBoards">0</div>
+                        <div class="stat-label">Участвовал</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="actions-section">
+            <div class="actions-buttons">
+                <button class="btn btn-primary btn-lg pulse" onclick="showCreateBoardModal()">
+                    <span>+</span> Создать новую доску
+                </button>
+                <button class="btn btn-secondary btn-lg" onclick="showJoinBoardModal()">
+                    <span>→</span> Присоединиться к доске
+                </button>
+            </div>
+        </section>
+
+        
+        <section class="boards-section">
+            <h2>Мои доски</h2>
+            <div id="boardsList" class="boards-grid">
+                
+            </div>
+            <div id="noBoardsMessage" class="no-boards" style="display: none;">
+                <p>У вас пока нет досок. Создайте новую или присоединитесь к существующей!</p>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+<div id="createBoardModal" class="modal">
+    <div class="modal-content scale-in">
+        <span class="close" onclick="closeCreateBoardModal()">&times;</span>
+        <h2>Создать новую доску</h2>
+        <form onsubmit="handleCreateBoard(event)">
+            <div class="form-group">
+                <label for="boardName">Название доски</label>
+                <input type="text" id="boardName" required placeholder="Введите название доски">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Создать доску</button>
+        </form>
+    </div>
+</div>
+
+
+<div id="joinBoardModal" class="modal">
+    <div class="modal-content scale-in">
+        <span class="close" onclick="closeJoinBoardModal()">&times;</span>
+        <h2>Присоединиться к доске</h2>
+        <form onsubmit="handleJoinBoard(event)">
+            <div class="form-group">
+                <label for="boardCode">Код доски</label>
+                <input type="text" id="boardCode" required 
+                       placeholder="Введите 8-символьный код" 
+                       maxlength="8"
+                       style="text-transform: uppercase;">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Присоединиться</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
